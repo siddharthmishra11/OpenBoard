@@ -27,6 +27,7 @@ let redo = document.querySelector("#redo");
 let fill = document.querySelector("#fill");
 let download = document.querySelector("#download");
 let color_container = document.querySelector(".color-container");
+let circle = document.querySelector("#ellipse");
 let drawMode = false;
 let ix,iy,fx,fy;
 let prev = 0;
@@ -38,7 +39,7 @@ let tracker = 0;
 canvasBoard.height = window.innerHeight;
 canvasBoard.width = window.innerWidth;
 tool.strokeStyle = "red"
-for(let i=0;i<4;i++)
+for(let i=0;i<5;i++)
   {
       width[i] = 2;
   }
@@ -144,16 +145,28 @@ rect.addEventListener("click",function(){
 
 line.addEventListener("click",function(){
     if(option[3].style.display=="flex")
-       option[3].style.display = "none";
+       {option[3].style.display = "none";
+}
     else{
         option[prev].style.display = "none";
         option[3].style.display = "flex";
     }
     tool.lineWidth = width[3];
     prev = 3;
-    curr = "line"
+    curr = "line";
+});
+circle.addEventListener("click",function(){
+    if(option[4].style.display=="flex")
+    {option[4].style.display = "none";
+}
+ else{
+     option[prev].style.display = "none";
+     option[4].style.display = "flex";
+ }
+ tool.lineWidth = width[4];
+ prev = 4;
+ curr = "circle";
 })
-
 fill.addEventListener("click",()=>{
        curr = "fill"
 })
@@ -168,28 +181,19 @@ canvasBoard.addEventListener("mousedown",function(e){
 canvasBoard.addEventListener("mouseup",function(e){
     fx = e.clientX-l;
     fy = e.clientY-t;
+    let data = {
+        ix: ix,
+        iy: iy,
+        fx: fx,
+        fy: fy,
+        color: tool.strokeStyle,
+        width: tool.lineWidth
+    }
     if(curr=="rect"){
-        let data = {
-            ix: ix,
-            iy: iy,
-            fx: fx,
-            fy: fy,
-            color: tool.strokeStyle,
-            width: tool.lineWidth
-        }
-        
         socket.emit("drawRect",data);
         //drawRect(data);
     }
     else if(curr=="line"||curr=="pencil"){
-        let data = {
-            ix: ix,
-            iy: iy,
-            fx: fx,
-            fy: fy,
-            color: tool.strokeStyle,
-            width: tool.lineWidth
-        }
         //drawLine(data);
         socket.emit("drawLine",data);
         let img = canvasBoard.toDataURL();
@@ -218,6 +222,18 @@ canvasBoard.addEventListener("mouseup",function(e){
         };
         socket.emit("drawfill",data);
         //drawfill(data);
+    }
+    else if(curr="circle")
+    { 
+        let data = {
+            ix: ix,
+            iy: iy,
+            fx: fx,
+            fy: fy,
+            color: tool.strokeStyle,
+            width: tool.lineWidth,
+        }
+        socket.emit("drawCircle",data);
     }
     drawMode = false;
 });
@@ -413,12 +429,13 @@ document.onmousemove = null;
 }
 }
 let ranger = document.querySelectorAll("input[type = 'range']");
-for(let i=0;i<4;i++)
+for(let i=0;i<5;i++)
 {
-ranger[i].addEventListener("change",()=>{
-     width[i] =  ranger[i].value;
-     tool.lineWidth = width[i];
-      
+
+   ranger[i].addEventListener("change",()=>{
+     
+        width[i] =  ranger[i].value;
+        tool.lineWidth = width[i];
 })
 }
 
@@ -616,6 +633,23 @@ function trackerUpdate(data)
     undoRedoArray.push(data.img);
     tracker++;
 }
+function drawCircle(data)
+{
+    let prevColor = tool.strokeStyle;
+    let prevWidth = tool.lineWidth;
+    tool.strokeStyle = data.color;
+    tool.lineWidth = data.width;
+    let mid = {
+        x: (data.ix+data.fx)/2,
+        y: (data.iy+data.fy)/2
+    }
+    let dist = Math.sqrt(Math.pow(data.fx-data.ix,2)+Math.pow(data.fy-data.iy,2));
+    tool.beginPath();
+    tool.arc(mid.x,mid.y,dist/2,0,2*Math.PI);
+    tool.stroke();
+    tool.strokeStyle = prevColor;
+    tool.lineWidth = prevWidth;
+}
 socket.on("drawRect",(data)=>{
     drawRect(data);
 })
@@ -638,4 +672,8 @@ socket.on("mouseMove",(data)=>{
 //undoRedo
 socket.on("undoRedo",(data)=>{
      undoRedo(data);
+})
+//drawCircle
+socket.on("drawCircle",(data)=>{
+    drawCircle(data);
 })

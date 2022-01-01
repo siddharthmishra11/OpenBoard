@@ -2,8 +2,12 @@ let express = require("express");
 let socket = require("socket.io");
 
 let app = express();
+
 app.use(express.static('public'));
-let server = app.listen(5500,()=>{
+
+let port = process.env.PORT||5500;
+
+let server = app.listen(port,()=>{
     console.log("app.listen is listening");
 })
 
@@ -33,5 +37,8 @@ io.on("connection",(socket)=>{
     //undoRedo
     socket.on("undoRedo",(data)=>{
         io.sockets.emit("undoRedo",data);
+    })
+    socket.on("drawCircle",(data)=>{
+        io.sockets.emit("drawCircle",data);
     })
 })
