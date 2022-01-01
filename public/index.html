@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Board</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"  rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class = "menubtn">
+        <span class="material-icons-outlined">
+            menu
+            </span>
+    </div>
+    <div class = "toolbar">
+        <div class="tool" id="pencil">
+            <img src = "./NewIcons/Black_Pencil.svg" alt = "" class = "tool-img"></img>
+            <div class = "size-box">  
+                    <input type="range" min="2" max="10" value="2" class = "slider">
+
+        </div>
+        </div>
+        <div class = "tool" id = "eraser">
+            <img src="./NewIcons/Eraser.svg" alt="" class = "tool-img">
+            <div class = "size-box">
+                <input type="range" min="2" max="10" value="2" class = "slider">
+           </div>
+        </div>
+        <div class = "tool" id = "sticky-notes">
+            <span class="material-icons-outlined gfont">
+                description
+                </span>
+        </div>
+        <div class = "tool" id = "image">
+            <span class="material-icons-outlined gfont">
+                image
+                </span>
+        </div>
+        <div class = "tool" id = "download">
+            <span class="material-icons-outlined gfont">
+                file_download
+                </span>
+        </div>
+        <div class = "tool" id = "undo">
+            <span class="material-icons-outlined gfont">
+                undo
+                </span>
+        </div>
+        <div class = "tool" id = "redo">
+            <span class="material-icons-outlined gfont">
+                redo
+                </span>
+        </div>
+        <div class = "tool" id = "rectangle">
+            <i class="fas fa-square"></i>
+            <div class = "size-box">
+                <input type="range" min="2" max="10" value="2" class = "slider">
+        </div>
+        </div>
+        <div class = "tool" id = "line">
+            <i class="fas fa-horizontal-rule"></i>
+                <div class = "size-box">
+                    <input type="range" min="2" max="10" value="2" class = "slider">
+             
+        </div>
+        </div>
+        <div class = "tool" id = "fill">
+            <span class="material-icons-outlined gfont">
+                format_color_fill
+                </span>
+        </div>
+        <div class="color-container">
+             <div class="red color"></div>
+             <div class="green color"></div>
+             <div class="blue color"></div>
+        </div>
+    </div>
+    <canvas>
+    </canvas>
+</body>
+
+<script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
+<script>
+    let socket = io.connect("http://localhost:5500/");
+</script>
+<script src = "script.js"></script>
+</html>
