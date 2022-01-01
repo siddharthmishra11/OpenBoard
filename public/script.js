@@ -12,6 +12,13 @@ let t = canvasBoard.getBoundingClientRect().top;
 let red = document.querySelector(".red");
 let green = document.querySelector(".green");
 let blue = document.querySelector(".blue");
+let orange = document.querySelector(".orange");
+let yellow = document.querySelector(".yellow");
+let indigo = document.querySelector(".indigo");
+let violet = document.querySelector(".violet");
+let gray = document.querySelector(".gray");
+let black = document.querySelector(".black");
+let curr_col = document.querySelector(".curr-col");
 let menu = document.querySelector(".menubtn");
 let stickyNotes = document.querySelector("#sticky-notes");
 let stickyImages = document.querySelector("#image");
@@ -19,8 +26,7 @@ let undo = document.querySelector("#undo");
 let redo = document.querySelector("#redo");
 let fill = document.querySelector("#fill");
 let download = document.querySelector("#download");
-
-
+let color_container = document.querySelector(".color-container");
 let drawMode = false;
 let ix,iy,fx,fy;
 let prev = 0;
@@ -29,10 +35,9 @@ let width = [];
 let curr = "rect";
 let undoRedoArray = [];
 let tracker = 0;
-
 canvasBoard.height = window.innerHeight;
 canvasBoard.width = window.innerWidth;
-tool.strokeStyle = "lightpink"
+tool.strokeStyle = "red"
 for(let i=0;i<4;i++)
   {
       width[i] = 2;
@@ -42,25 +47,62 @@ undoRedoArray.push(canvasBoard.toDataURL());
 menu.addEventListener("click",function(){
     if(invisible){
         toolbar.style.display = "flex";
+        color_container.style.display = "flex";
         toolbar.classList.add("toolAnimation");
+        color_container.classList.add("toolAnimation");
     }
     else{
         toolbar.style.display = "none";
+        color_container.style.display = "none";
         toolbar.classList.remove("toolAnimation");
+        color_container.classList.remove("toolAnimation");
     }
     invisible = !invisible;
 })
 
 red.addEventListener("click",function(){
-    tool.strokeStyle = "lightpink";
+    tool.strokeStyle = "red";
+    curr_col.style.backgroundColor = "red";
+})
+
+orange.addEventListener("click",function(){
+    tool.strokeStyle = "orange";
+    curr_col.style.backgroundColor = "orange";
 })
 
 green.addEventListener("click",function(){
-    tool.strokeStyle = "lightgreen";
+    tool.strokeStyle = "green";
+    curr_col.style.backgroundColor = "green";
+})
+
+yellow.addEventListener("click",function(){
+    tool.strokeStyle = "yellow";
+    curr_col.style.backgroundColor = "yellow";
 })
 
 blue.addEventListener("click",function(){
-    tool.strokeStyle = "lightblue";
+    tool.strokeStyle = "blue";
+    curr_col.style.backgroundColor = "blue";
+})
+
+indigo.addEventListener("click",function(){
+    tool.strokeStyle = "indigo";
+    curr_col.style.backgroundColor = "indigo";
+})
+
+violet.addEventListener("click",function(){
+    tool.strokeStyle = "violet";
+    curr_col.style.backgroundColor = "violet";
+})
+
+gray.addEventListener("click",function(){
+    tool.strokeStyle = "gray";
+    curr_col.style.backgroundColor = "gray";
+})
+
+black.addEventListener("click",function(){
+    tool.strokeStyle = "black";
+    curr_col.style.backgroundColor = "black";
 })
 
 pencil.addEventListener("click",function(e){
@@ -70,7 +112,6 @@ pencil.addEventListener("click",function(e){
         option[prev].style.display = "none";
         option[0].style.display = "flex";
     }
-    tool.strokeStyle = "lightpink";
     tool.lineWidth = width[0];
     prev = 0;
     curr = "pencil";
@@ -83,7 +124,7 @@ eraser.addEventListener("click",function(){
         option[prev].style.display = "none";
         option[1].style.display = "flex";
     }
-    tool.strokeStyle = "white"
+    tool.strokeStyle = "white";
     tool.lineWidth = width[1];
     prev = 1;
     curr = "pencil";
@@ -96,7 +137,6 @@ rect.addEventListener("click",function(){
         option[prev].style.display = "none";
         option[2].style.display = "flex";
     }
-    tool.strokeStyle = "lightpink";
     tool.lineWidth = width[2];
     prev = 2;
     curr = "rect"
@@ -109,7 +149,6 @@ line.addEventListener("click",function(){
         option[prev].style.display = "none";
         option[3].style.display = "flex";
     }
-    tool.strokeStyle = "lightpink";
     tool.lineWidth = width[3];
     prev = 3;
     curr = "line"
@@ -129,14 +168,12 @@ canvasBoard.addEventListener("mousedown",function(e){
 canvasBoard.addEventListener("mouseup",function(e){
     fx = e.clientX-l;
     fy = e.clientY-t;
-    let width  = fx - ix;
-    let height = fy - iy;
     if(curr=="rect"){
         let data = {
             ix: ix,
             iy: iy,
-            width: width,
-            height: height,
+            fx: fx,
+            fy: fy,
             color: tool.strokeStyle,
             width: tool.lineWidth
         }
@@ -510,11 +547,13 @@ function drawLine(data)
 
 function drawRect(data)
 {
+    let width  = data.fx - data.ix;
+    let height = data.fy - data.iy;
     let prevColor = tool.strokeStyle;
     let prevWidth = tool.lineWidth;
     tool.strokeStyle = data.color;
     tool.lineWidth = data.width;
-    tool.strokeRect(data.ix,data.iy,data.width,data.height);
+    tool.strokeRect(data.ix,data.iy,width,height);
     let img = canvasBoard.toDataURL();
     let data_ = {
         img: img,
