@@ -68,7 +68,10 @@ body{
 .gfont{
     font-size: 40px;
 }
-
+canvas{
+    margin-top: 90px;
+    margin-left: 90px;
+}
 .toolAnimation{
     animation-name: toolAnimation;
     animation-duration: 1s;
@@ -158,11 +161,6 @@ body{
 .sticky-notes-content>img{
     height: 100%;
     width: 100%;
-}
-
-canvas{
-    margin-top: 90px;
-    margin-left: 90px;
 }
 
 .color-container{
